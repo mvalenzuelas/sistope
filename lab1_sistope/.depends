@@ -1,0 +1,2 @@
+main.o: main.c funciones.h
+funciones.o: funciones.c funciones.h
