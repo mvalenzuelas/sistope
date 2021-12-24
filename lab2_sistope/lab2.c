@@ -48,7 +48,7 @@ int main(int argc, char*  argv[])
 		char stringid[30];
 		sprintf(stringid,"%d",id);
 		argv2[argc+1]=stringid;
-		execv("./out",argv2);
-	}
+		execv("./out",argv2)
+;	}
 	return 0;
 }
