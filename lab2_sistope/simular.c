@@ -44,6 +44,8 @@ int main(int argc, char **argv)
 				abort();
 		}
 	}
+	printf("qValue:%d\n",qValue );
+
 	//Leer el archivo de entrada indicado en el comando '-i'
 	FILE* entrada=fopen("entrada.in","r");
     if (entrada==NULL){
@@ -78,8 +80,9 @@ int main(int argc, char **argv)
 	simulacion(particualasPorProceso, arreglo, nValue, matrizImpactos);
 	for (int i = 0; i < nValue; ++i)
 	{
-		printf("%.6f \n",arreglo[i] );
+		printf("proeso %d: arreglo[%d]:%.6f \n",qValue,i,arreglo[i] );
 	}
+
 	//Liberar memoria
 	for (int i = 0; i < particualasPorProceso; i++){
 		free(matrizImpactos[i]);
