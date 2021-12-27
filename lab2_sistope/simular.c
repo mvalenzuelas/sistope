@@ -3,39 +3,17 @@
 
 int main()
 {
-
-	char* const* argv2;
-	read(STDIN_FILENO,argv2,100);
 	
-	int nValue=0;
-	int pValue=0;
-	int cValue=0;
-	int qValue=0;
-	char* iValue=NULL;
-	int c;
-	opterr=0;
-	while ((c=getopt(12,argv2,"N:p:c:q:i"))!= -1){
-		switch(c){
-			case 'N':
-				sscanf(optarg,"%d",&nValue);
-				break;
-			case 'p':
-				sscanf(optarg,"%d",&pValue);
-				break;
-			case 'c':
-				sscanf(optarg,"%d",&c);
-				break;
-			case 'q':
-				sscanf(optarg,"%d",&qValue);
-				break;
-			case 'i':
-				iValue=optarg;	
-				break;
-			default:
-				abort();
-		}
-	}
- 
+	char argv2[5][200];
+	read(STDIN_FILENO,argv2,500);
+	char iValue[11];
+	int nValue=(int)strtol(argv2[0],NULL,10);
+	int pValue=(int)strtol(argv2[1],NULL,10);
+	int qValue=(int)strtol(argv2[2],NULL,10);
+	int cValue=(int)strtol(argv2[4],NULL,10);
+ 	FILE* test=fopen("test.txt","w");
+    fprintf(test, "%s\n",argv2[]);
+ 	
 	//Leer el archivo de entrada indicado en el comando '-i'
 	FILE* entrada=fopen("entrada.in","r");
     if (entrada==NULL){
@@ -43,6 +21,8 @@ int main()
         return 0;
     }
 
+    
+    exit(0);
 	//Leer desde el archivo de entrada la cantidad de particulas indicadas en la primera linea del archivo
 	int cantParticulas;
 	fscanf(entrada,"%d",&cantParticulas);

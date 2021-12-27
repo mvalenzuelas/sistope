@@ -16,7 +16,7 @@ int main(int argc, char*  argv[])
 	int pValue=0;
 	int cValue=0;
 	char* oValue=NULL;
-	char* iValue=NULL;
+	char iValue[30];
 	int c;
 	opterr=0;
 	while ((c=getopt(argc,argv,"N:p:c:i:o"))!= -1){
@@ -34,7 +34,7 @@ int main(int argc, char*  argv[])
 				oValue=optarg;
 				break;
 			case 'i':
-				iValue=optarg;	
+				strcpy(iValue,optarg);	
 				break;
 			case '?':
 				if (optopt=='o'){
@@ -82,10 +82,16 @@ int main(int argc, char*  argv[])
 		if (pid>0)
 		{
 			sprintf(arregloid,"%d",i);
-			char* argv2[]={"simular","-N",nValueStr,"-p",pValueStr,"-c",cValueStr,"-q",arregloid,"-i",iValue};
+			char argv2[5][11];
+			strcpy(argv2[0],nValueStr);
+			strcpy(argv2[1],pValueStr);
+			strcpy(argv2[2],arregloid);
+			strcpy(argv2[3],iValue);
+			strcpy(argv2[4],cValueStr);
 			close(fd[i][read_d]);
 			write(fd[i][write_d],argv2,sizeof(argv2));
 			close(fd[i][write_d]);
+			printf("len:%ld\n",strlen(argv2[3]));
 			waitpid(pid,NULL,0);
 			char buffer[30];
 			close(fd1[i][write_d]);
@@ -107,7 +113,7 @@ int main(int argc, char*  argv[])
 			close(fd1[i][read_d]);
 			dup2(fd1[i][write_d],STDOUT_FILENO);
 			close(fd1[i][write_d]);
-			char* a[]={"",""};;
+			char* a[]={"simular",NULL};
 			execv("./simular",a);
 
 		}
