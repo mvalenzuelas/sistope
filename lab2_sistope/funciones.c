@@ -10,7 +10,9 @@ Entradas:
 	matrizImpactos: Una matriz vacia de enteros con 2 columnas y tantas filas como cantidad de particulas
 					para almacenar la posicion de impacto de una particula y la cantidad de energia
 
-	cantParticulas:	Cantidad de particulas que golpean al material
+	particulasPorProcesoEntero:
+	particulasPorProceso:
+	qValue:
 
 Funcionalidad: 	
 	Función que lee un fichero de texto de entrada que contenga la información de los impactos de las particulas,
@@ -22,15 +24,15 @@ Salidas:
 	segunda columna indica la cantidad de energia producida por el impacto
 */
 
-void leerArchivo(FILE* entrada, int** matrizImpactos,int particualasPorProcesoEntero,int particualasPorProceso, int qValue){
+void leerArchivo(FILE* entrada, int** matrizImpactos,int particulasPorProcesoEntero,int particulasPorProceso, int qValue){
 	int pos=0;
 	int energy=0;
 	char linea[60];
-	for (int i = 0; i <= particualasPorProcesoEntero*qValue; ++i)
+	for (int i = 0; i <= particulasPorProcesoEntero*qValue; ++i)
 	{
 		fgets(linea,60,entrada);
 	}
-	for(int f = 0; f < particualasPorProceso; f++){
+	for(int f = 0; f < particulasPorProceso; f++){
 		fscanf(entrada, "%d %d", &pos,&energy);
 		matrizImpactos[f][0]=pos;
 		matrizImpactos[f][1]=energy;
@@ -157,6 +159,27 @@ void escribirArchivo(FILE* archivo, float* arreglo, int cantCeldas){
 	fclose(archivo);
 }
 
+/*
+Entradas:
+	resultados:		Matriz de flotantes en la cual se almacena el resultado del proceso que se esté ejecutando
+	pid:			pid del proceso padre que se está ejecutando
+	fd:				matriz de enteros la cual representa n tuberías (n = cantidad de procesos) la cual recibe la información desde el padre al hijo
+	fd1:			matriz de enteros la cual representa n tuberías (n = cantidad de procesos) la cual envía la información al padre desde el hijo
+	nValue:			valor entero el cual representa el número de celdas
+	pValue:			valor entero el cual representa el número de procesos
+	cValue:			valor entero el cual representa la cantidad de lineas del archivo de entrada
+	oValue:			cadena de carácteres el cual representa el nombre del archivo de salida
+	iValue			cadena de carácteres el cual representa el nombre del archivo de entrada
+
+Funcionalidad: 	
+	Función que permite crear n procesos hijos (n = valor de pValue), en el cual si el proceso es el padre, envía a través de 
+	los pipes los argumentos necesarios para ejecutar la simulación. Cuando el proceso el cual se está ejecutando es uno de los hijos,
+	se recibe a través de la tubería los argumentos enviados por el padre y los duplica en STDIN-FILENO, y luego trás la simulación recibe
+	los resultados a través de STDOUT-FILENO, y cuando este termina almacena el resultado en una matriz.
+				
+Salidas:
+		Salida por referencia de la matríz de flotantes de resultados.
+*/
 void simulacionMultiproceso(float** resultados, pid_t pid, int** fd, int** fd1, int nValue, int pValue, int cValue, int dValue, char* oValue, char* iValue){
 
 	for (int i = 0; i < pValue; ++i)

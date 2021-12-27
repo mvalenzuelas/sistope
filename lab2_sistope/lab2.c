@@ -51,6 +51,7 @@ int main(int argc, char*  argv[])
 
 	}
 
+	// Se lee el archivo de entrada
 	FILE* entrada=fopen(iValue,"r");
 	if (entrada==NULL)
 	{
@@ -59,9 +60,11 @@ int main(int argc, char*  argv[])
 	}
 	fclose(entrada);
 	
+	// Se obtiene el pid del proceso en ejecución
 	pid_t pid=getpid();
 
 
+	// Se crean las tuberías, representadas en una matríz con pValue filas
 	int** fd=(int**)malloc(sizeof(int*)*pValue);
 	for (int i = 0; i < pValue; ++i)
 	{
@@ -74,15 +77,17 @@ int main(int argc, char*  argv[])
 		fd1[i]=(int*)malloc(sizeof(int)*2);
 	}
 
+	// Se crea la matriz en donde se almacenarán los resultados
 	float** resultados=(float**)malloc(sizeof(float*)*pValue);
 	for (int k = 0; k < pValue; ++k)
 	{
 		resultados[k]=(float*)malloc(sizeof(float)*nValue);
 	}
 
-
+	// Se ejecuta la simulación multiproceso
 	simulacionMultiproceso(resultados, pid, fd, fd1, nValue, pValue, cValue, dValue, oValue, iValue);
 
+	// Si el pid actual es el padre, se escriben los resultados
 	if (pid>0)
 	{		
 
@@ -104,6 +109,8 @@ int main(int argc, char*  argv[])
 			niceprint(nValue,arreglo,arreglo[max]);
 		}
 		
+
+		// Se libera la memoria
 		free(arreglo);
 
 		for (int i = 0; i < pValue; ++i)
