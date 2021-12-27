@@ -14,5 +14,6 @@ void calcularEnergia(float* arreglo, int cantCeldas, float MIN_ENERGY, int posic
 void simulacion(int cantParticulas, float* arreglo, int cantCeldas, int** matrizImpactos);
 int obtenerMaximo(float* arreglo, int cantCeldas);
 void escribirArchivo(FILE* archivo,float* arreglo, int cantCeldas);
+void simulacionMultiproceso(float** resultados, pid_t pid, int** fd, int** fd1, int nValue, int pValue, int cValue, int dValue, char oValue[30], char* iValue);
 extern void niceprint(int N, float *Energy, float max_energy);
 #endif

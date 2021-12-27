@@ -12,7 +12,6 @@ int main(int argc, char*  argv[])
 	char* oValue=NULL;
 	char iValue[30];
 	int c;
-	printf("Hola\n");
 	opterr=0;
 	while ((c=getopt(argc,argv,"N:p:c:i:o:D"))!= -1){
 		switch(c){
@@ -53,11 +52,6 @@ int main(int argc, char*  argv[])
 	}
 	pid_t pid=getpid();
 
-	float** resultados=(float**)malloc(sizeof(float*)*pValue);
-	for (int k = 0; k < pValue; ++k)
-	{
-		resultados[k]=(float*)malloc(sizeof(float)*nValue);
-	}
 
 	int** fd=(int**)malloc(sizeof(int*)*pValue);
 	for (int i = 0; i < pValue; ++i)
@@ -71,60 +65,18 @@ int main(int argc, char*  argv[])
 		fd1[i]=(int*)malloc(sizeof(int)*2);
 	}
 
-	for (int i = 0; i < pValue; ++i)
+	float** resultados=(float**)malloc(sizeof(float*)*pValue);
+	for (int k = 0; k < pValue; ++k)
 	{
-		pipe(fd[i]);
-		pipe(fd1[i]);
-		pid=fork();
-		if (pid>0)
-		{
-			close(fd[i][read_d]);
-			write(fd[i][write_d],&nValue,4);
-			write(fd[i][write_d],&pValue,4);
-			write(fd[i][write_d],&cValue,4);
-			write(fd[i][write_d],&i,4);
-			write(fd[i][write_d],iValue,sizeof(iValue));
-			close(fd[i][write_d]);
-
-
-			//Esperar que el proceso hijo sea ejecutado
-			waitpid(pid,NULL,0);
-			float* resultadoProceso=(float*)malloc(sizeof(float)*nValue);
-			close(fd1[i][write_d]);
-			for (int j = 0; j < nValue; ++j)
-			{
-				read(fd1[i][read_d],&resultadoProceso[j],sizeof(float));
-			}
-			close(fd1[i][read_d]);
-			for (int j = 0; j < nValue; ++j)
-			{
-				resultados[i][j]=resultadoProceso[j];
-			}
-		}
-		if (pid==-1)
-		{
-			printf("Error al crear al hijo numero\n" );
-		}
-		if (pid==0)
-		{
-
-			//Se entregan los parametros al programa simular por el descriptor STDIN_FILENO
-			close(fd[i][write_d]);
-			dup2(fd[i][read_d],STDIN_FILENO);
-			close(fd[i][read_d]);
-			//Se obtiene los resultados de la simulación
-			close(fd1[i][read_d]);
-			dup2(fd1[i][write_d],STDOUT_FILENO);
-			close(fd1[i][write_d]);
-			char* a[]={"simular",NULL};
-			execv("./simular",a);
-
-		}
-		
+		resultados[k]=(float*)malloc(sizeof(float)*nValue);
 	}
 
+
+	simulacionMultiproceso(resultados, pid, fd, fd1, nValue, pValue, cValue, dValue, oValue, iValue);
+
 	if (pid>0)
-	{
+	{		
+
 		FILE* salida=fopen(oValue,"w");
 		float* arreglo=(float*)malloc(sizeof(float)*nValue);
 		for (int i = 0; i < nValue; ++i)
@@ -142,6 +94,7 @@ int main(int argc, char*  argv[])
 		{
 			niceprint(nValue,arreglo,arreglo[max]);
 		}
+		
 		free(arreglo);
 
 		for (int i = 0; i < pValue; ++i)
@@ -153,8 +106,6 @@ int main(int argc, char*  argv[])
 		free(fd);
 		free(fd1);
 		free(resultados);
-
-
 	}
 
 	return 0;

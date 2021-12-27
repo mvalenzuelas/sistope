@@ -18,8 +18,12 @@ int main()
 
 	//Leer el archivo de entrada indicado en el comando '-i'
 	FILE* entrada=fopen(iValue,"r");
+	FILE* entrada2=fopen("testiValue.txt","w");
+	fprintf(entrada2,"NOMBRE: %s\n",iValue);
+	fclose(entrada2);
+
     if (entrada==NULL){
-        perror("Error al abrir el archivo\n");
+        perror("Error al abrir el archivo xd\n");
         return 0;
     }
 
