@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <ctype.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <unistd.h>
+#include "funciones.h"
 #define read_d 0
 #define write_d 1
 
@@ -15,11 +7,12 @@ int main(int argc, char*  argv[])
 	int nValue=0;
 	int pValue=0;
 	int cValue=0;
+	int dValue=0;
 	char* oValue=NULL;
 	char iValue[30];
 	int c;
 	opterr=0;
-	while ((c=getopt(argc,argv,"N:p:c:i:o"))!= -1){
+	while ((c=getopt(argc,argv,"N:p:c:i:o:D"))!= -1){
 		switch(c){
 			case 'N':
 				sscanf(optarg,"%d",&nValue);
@@ -36,9 +29,15 @@ int main(int argc, char*  argv[])
 			case 'i':
 				strcpy(iValue,optarg);	
 				break;
+			case 'D':
+				dValue=1;
+				break;
 			case '?':
 				if (optopt=='o'){
 					fprintf (stderr, "Opcion -%c requiere un argumento.\n", optopt);
+				}
+				else if (isprint (optopt)){
+          			fprintf (stderr, "Opcion desconocida `-%c'.\n", optopt);
 				}
         		else{
           			fprintf (stderr,"Opcion con caracter desconocido `\\x%x'.\n",optopt);
@@ -61,6 +60,12 @@ int main(int argc, char*  argv[])
 	pid_t pidAnterior;
 	int status;
 	int id;
+
+	float** resultados=(float**)malloc(sizeof(float*)*pValue);
+	for (int k = 0; k < nValue; ++k)
+	{
+		resultados[k]=(float*)malloc(sizeof(float)*nValue);
+	}
 
 	int** fd=(int**)malloc(sizeof(int*)*pValue);
 	for (int i = 0; i < pValue; ++i)
@@ -94,16 +99,13 @@ int main(int argc, char*  argv[])
 			close(fd1[i][write_d]);
 			for (int j = 0; j < nValue; ++j)
 			{
-				read(fd1[i][read_d],&resultadoProceso[j],sizeof(resultadoProceso[j]));
+				read(fd1[i][read_d],&resultadoProceso[j],sizeof(float));
 			}
 			close(fd1[i][read_d]);
-			FILE* test=fopen("test.txt","w");
 			for (int j = 0; j < nValue; ++j)
 			{
-				fprintf(test, "%f\n",resultadoProceso[j]);
+				resultados[i][j]=resultadoProceso[j];
 			}
-			
-			
 		}
 		if (pid==-1)
 		{
@@ -127,6 +129,27 @@ int main(int argc, char*  argv[])
 		
 	}
 
-	
+	if (pid>0)
+	{
+		FILE* salida=fopen("salida.out","w");
+		float* arreglo=(float*)malloc(sizeof(float)*nValue);
+		for (int i = 0; i < nValue; ++i)
+		{
+			arreglo[i]=0;
+			for (int j = 0; j < pValue; ++j)
+			{
+				arreglo[i]=resultados[j][i]+arreglo[i];
+
+			}
+		}
+		int max= obtenerMaximo(arreglo,nValue);
+		escribirArchivo(salida,arreglo,nValue);
+		if (dValue)
+		{
+			niceprint(nValue,arreglo,arreglo[max]);
+		}
+
+	}
+
 	return 0;
 }

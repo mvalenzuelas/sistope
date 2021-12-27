@@ -7,6 +7,7 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 void leerArchivo(FILE* entrada, int** matrizImpactos,int cantParticulas,int particualasPorProceso, int qValue);
 void calcularEnergia(float* arreglo, int cantCeldas, float MIN_ENERGY, int posicionImpacto, int energiaImpacto);

@@ -16,9 +16,5 @@ clean:
 run: clean
 	clear
 	gcc -o simular funciones.c simular.c -lm
-	gcc -o lab2 lab2.c
-	./lab2 -N 10 -p 5 -c 7 -i entrada.in -o salida.out 
-
-
-
-
+	gcc -o lab2 funciones.c lab2.c -lm -lniceprint -L .
+	./lab2 -N 10 -p 5 -c 7 -i entrada.in -o salida.out -D

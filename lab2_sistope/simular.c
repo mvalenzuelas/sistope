@@ -49,24 +49,19 @@ int main()
 	}
 	//Simular el calculo de los impactos en el material
 	simulacion(particulasPorProceso, arreglo, nValue, matrizImpactos);
-	FILE* test1=fopen("test1.txt","w");
-	for (int j = 0; j < nValue; ++j)
-	{
-	
-		fprintf(test1, "%f\n",arreglo[j]);
-	}
+
 
 	//Liberar memoria
 	for (int i = 0; i < particulasPorProceso; i++){
 		free(matrizImpactos[i]);
 	}
-	free(matrizImpactos);
-	free(arreglo);
-	char stringValue[30];
 
 	for (int i = 0; i <nValue; ++i)
 	{
-		write(STDOUT_FILENO,&arreglo[i],sizeof(arreglo[i]));
+		write(STDOUT_FILENO,&arreglo[i],sizeof(float));
 	}
+	free(matrizImpactos);
+	free(arreglo);
+
 
 }

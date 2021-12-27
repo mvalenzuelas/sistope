@@ -145,10 +145,10 @@ Salidas:
 */
 void escribirArchivo(FILE* archivo, float* arreglo, int cantCeldas){
 	int max = obtenerMaximo(arreglo,cantCeldas);
-	fprintf(archivo,"%d = %f\n", max, arreglo[max]);
+	fprintf(archivo,"%d  %f\n", max, arreglo[max]);
 	for (int i = 0; i < cantCeldas; i++)
 	{
-		fprintf(archivo,"%d = %f\n", i, arreglo[i]);
+		fprintf(archivo,"%d %f\n", i, arreglo[i]);
 	}
 	fclose(archivo);
 }
