@@ -8,7 +8,7 @@ int main(int argc, char*  argv[])
 	int pValue=0;
 	int cValue=0;
 	int dValue=0;
-	char* oValue=NULL;
+	char oValue[30];
 	char iValue[30];
 	int c;
 	opterr=0;
@@ -24,7 +24,7 @@ int main(int argc, char*  argv[])
 				sscanf(optarg,"%d",&c);
 				break;
 			case 'o':
-				oValue=optarg;
+				strcpy(oValue,optarg);
 				break;
 			case 'i':
 				strcpy(iValue,optarg);	
@@ -48,18 +48,7 @@ int main(int argc, char*  argv[])
 		}
 	}
 
-	char arregloid[30];
-	char nValueStr[30];
-	char pValueStr[30];
-	char cValueStr[30];
-	sprintf(nValueStr,"%d",nValue);
-	sprintf(cValueStr,"%d",cValue);
-	sprintf(pValueStr,"%d",pValue);
-
 	pid_t pid=getpid();
-	pid_t pidAnterior;
-	int status;
-	int id;
 
 	float** resultados=(float**)malloc(sizeof(float*)*pValue);
 	for (int k = 0; k < nValue; ++k)
@@ -94,6 +83,9 @@ int main(int argc, char*  argv[])
 			write(fd[i][write_d],&i,4);
 			write(fd[i][write_d],iValue,sizeof(iValue));
 			close(fd[i][write_d]);
+
+
+			//Esperar que el proceso hijo sea ejecutado
 			waitpid(pid,NULL,0);
 			float* resultadoProceso=(float*)malloc(sizeof(float)*nValue);
 			close(fd1[i][write_d]);
@@ -118,7 +110,7 @@ int main(int argc, char*  argv[])
 			close(fd[i][write_d]);
 			dup2(fd[i][read_d],STDIN_FILENO);
 			close(fd[i][read_d]);
-			//
+			//Se obtiene los resultados de la simulación
 			close(fd1[i][read_d]);
 			dup2(fd1[i][write_d],STDOUT_FILENO);
 			close(fd1[i][write_d]);
@@ -131,7 +123,7 @@ int main(int argc, char*  argv[])
 
 	if (pid>0)
 	{
-		FILE* salida=fopen("salida.out","w");
+		FILE* salida=fopen(oValue,"w");
 		float* arreglo=(float*)malloc(sizeof(float)*nValue);
 		for (int i = 0; i < nValue; ++i)
 		{
@@ -148,6 +140,18 @@ int main(int argc, char*  argv[])
 		{
 			niceprint(nValue,arreglo,arreglo[max]);
 		}
+		free(arreglo);
+		for (int i = 0; i < nValue; ++i)
+		{
+			free(fd[i])
+			free(fd1[i])
+			free(resultados[i])
+		}
+		free(fd);
+		free(fd1);
+		free(resultados);
+		free(arreglo);
+
 
 	}
 
