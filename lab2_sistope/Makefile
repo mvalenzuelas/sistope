@@ -21,3 +21,6 @@ $(objects):
 clean: 
 	$(RM) $(out) $(objects) simular
 .PHONY: 
+
+
+

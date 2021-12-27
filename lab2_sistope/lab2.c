@@ -50,6 +50,15 @@ int main(int argc, char*  argv[])
 
 
 	}
+
+	FILE* entrada=fopen(iValue,"r");
+	if (entrada==NULL)
+	{
+		perror("El archivo de entrada no existe");
+		return 0;
+	}
+	fclose(entrada);
+	
 	pid_t pid=getpid();
 
 
