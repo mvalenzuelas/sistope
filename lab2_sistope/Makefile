@@ -4,10 +4,6 @@ out = lab2
 source = funciones.c lab2.c
 objects = $(source:.c=.o)
 
-
-
-
-
 $(build):
 	$(out) 
 

@@ -5,18 +5,25 @@
 
 /*
 Entradas: 	
-	entrada: 		Un fichero de texto en formato de lectura que contiene la información de entrada
+	entrada: 						Un fichero de texto en formato de lectura que contiene la información de entrada
 
-	matrizImpactos: Una matriz vacia de enteros con 2 columnas y tantas filas como cantidad de particulas
-					para almacenar la posicion de impacto de una particula y la cantidad de energia
+	matrizImpactos: 				Una matriz vacia de enteros con 2 columnas y tantas filas como cantidad de particulas
+									para almacenar la posicion de impacto de una particula y la cantidad de energia
 
 	particulasPorProcesoEntero:
 	particulasPorProceso:
 	qValue:
 
+	particulasPorProceso:			Entero que representa cantidad de particulas que simular el proceso actual
+
+	qValue:							Entero que representa el identidficador del prcoso que se esta ejecutan
+
+
 Funcionalidad: 	
 	Función que lee un fichero de texto de entrada que contenga la información de los impactos de las particulas,
-	posicion y cantidad de energia aplicada, y almacena dicha información en una matriz de enteros
+	correspondiente para el proceso actual, teniendo en cuenta la cantidad de particulas que se deben leer en el
+	proceso actual y cuantos se leyeron en el proceso anterior posicion, almacena dicha información en una matriz
+	de enteros
 
 Salidas: 
 	Entrega por paso por referencia una matriz de enteros 'matriz de impactos' de orden canParticulas X 2. En cada fila se
