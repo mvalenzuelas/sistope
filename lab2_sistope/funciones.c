@@ -30,7 +30,6 @@ void leerArchivo(FILE* entrada, int** matrizImpactos,int particualasPorProcesoEn
 		fscanf(entrada, "%d %d", &pos,&energy);
 		matrizImpactos[f][0]=pos;
 		matrizImpactos[f][1]=energy;
-		printf("%d %d\n",pos,energy);
 	}
 	fclose(entrada);
 }

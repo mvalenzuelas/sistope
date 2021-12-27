@@ -7,6 +7,8 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
+#define read_d 0
+#define write_d 1
 
 int main(int argc, char*  argv[])
 {
@@ -17,8 +19,7 @@ int main(int argc, char*  argv[])
 	char* iValue=NULL;
 	int c;
 	opterr=0;
-
-	while ((c=getopt(argc,argv,"N:p:c:o:i"))!= -1){
+	while ((c=getopt(argc,argv,"N:p:c:i:o"))!= -1){
 		switch(c){
 			case 'N':
 				sscanf(optarg,"%d",&nValue);
@@ -48,10 +49,16 @@ int main(int argc, char*  argv[])
 		}
 	}
 
+	char arregloid[30];
+	char nValueStr[30];
+	char pValueStr[30];
+	char cValueStr[30];
+	sprintf(nValueStr,"%d",nValue);
+	sprintf(cValueStr,"%d",cValue);
+	sprintf(pValueStr,"%d",pValue);
 
 	pid_t pid=getpid();
 	pid_t pidAnterior;
-	pid_t pidPadre=getpid();
 	int status;
 	int id;
 
@@ -61,58 +68,52 @@ int main(int argc, char*  argv[])
 		fd[i]=(int*)malloc(sizeof(int)*2);
 	}
 
+	int** fd1=(int**)malloc(sizeof(int*)*pValue);
 	for (int i = 0; i < pValue; ++i)
 	{
-		
-		if (pid>0)
-		{
-			/*
-			pipe(fd[i]);
-			char arregloid[30];
-			char nValueStr[30];
-			char pValueStr[30];
-			char cValueStr[30];
-			sprintf(nValueStr,"%d",nValue);
-			sprintf(cValueStr,"%d",cValue);
-			sprintf(pValueStr,"%d",pValue);
-			sprintf(arregloid,"%d",id);
-			char* argv2[]={"simular","-N",nValueStr,"-p",pValueStr,"-c",cValueStr,"-q",arregloid,"-i",iValue,NULL};
-			*/
-			id=i;
-			pid=fork();
-			//close(fd[i][0]);
-			//write(fd[i][1],argv2,sizeof(argv2));
-			//close(fd[i][1]);
-		}
-	}
-	
-	if (pid)
-	{
-		waitpid(pid,NULL,0);
-		printf("Este es el padre\n");
-	}
-	if (pid==-1)
-	{
-		printf("Error al crear al hijo numero\n" );
-	}
-	if (pid==0)
-	{
-		printf("Pid:%d,getpid:%d\n",pid,getpid());
-		char arregloid[30];
-		char nValueStr[30];
-		char pValueStr[30];
-		char cValueStr[30];
-		sprintf(nValueStr,"%d",nValue);
-		sprintf(cValueStr,"%d",cValue);
-		sprintf(pValueStr,"%d",pValue);
-		sprintf(arregloid,"%d",id);
-		char* argv2[]={"simular","-N",nValueStr,"-p",pValueStr,"-c",cValueStr,"-q",arregloid,"-i",iValue,NULL};
-		//char* arr[100];
-		//close(fd[id][1]);
-		//read(fd[id][0],arr,sizeof(arr));
-		//close(fd[id][0]);
-		execv("/home/maximiliano/Escritorio/semestre6/sistope/lab2_sistope/simular",argv2);
+		fd1[i]=(int*)malloc(sizeof(int)*2);
 	}
 
+	for (int i = 0; i < pValue; ++i)
+	{
+		pipe(fd[i]);
+		pipe(fd1[i]);
+		pid=fork();
+		if (pid>0)
+		{
+			sprintf(arregloid,"%d",i);
+			char* argv2[]={"simular","-N",nValueStr,"-p",pValueStr,"-c",cValueStr,"-q",arregloid,"-i",iValue};
+			close(fd[i][read_d]);
+			write(fd[i][write_d],argv2,sizeof(argv2));
+			close(fd[i][write_d]);
+			waitpid(pid,NULL,0);
+			char buffer[30];
+			close(fd1[i][write_d]);
+			read(fd1[i][read_d],buffer,30);
+			close(fd1[i][read_d]);
+		}
+		if (pid==-1)
+		{
+			printf("Error al crear al hijo numero\n" );
+		}
+		if (pid==0)
+		{
+
+			//Se entregan los parametros al programa simular por el descriptor STDIN_FILENO
+			close(fd[i][write_d]);
+			dup2(fd[i][read_d],STDIN_FILENO);
+			close(fd[i][read_d]);
+			//
+			close(fd1[i][read_d]);
+			dup2(fd1[i][write_d],STDOUT_FILENO);
+			close(fd1[i][write_d]);
+			char* a[]={"",""};;
+			execv("./simular",a);
+
+		}
+		
+	}
+
+	
 	return 0;
 }

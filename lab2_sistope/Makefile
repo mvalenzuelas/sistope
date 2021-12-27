@@ -14,9 +14,10 @@ clean:
 	$(RM) $(out) $(objects) 
 .PHONY: clean
 run: clean
+	clear
 	gcc -o simular funciones.c simular.c -lm
 	gcc -o lab2 lab2.c
-	./lab2 -N 10 -p 5 -i entrada.in -o salida.out -c 7
+	./lab2 -N 10 -p 5 -c 7 -i entrada.in -o salida.out 
 
 
 
