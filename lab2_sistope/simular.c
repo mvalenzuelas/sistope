@@ -4,16 +4,18 @@
 int main()
 {
 	
-	char argv2[5][200];
-	read(STDIN_FILENO,argv2,500);
-	char iValue[11];
-	int nValue=(int)strtol(argv2[0],NULL,10);
-	int pValue=(int)strtol(argv2[1],NULL,10);
-	int qValue=(int)strtol(argv2[2],NULL,10);
-	int cValue=(int)strtol(argv2[4],NULL,10);
- 	FILE* test=fopen("test.txt","w");
-    fprintf(test, "%s\n",argv2[]);
- 	
+	int nValue;
+	int pValue;
+	int cValue;
+	int qValue;
+	char iValue[30];
+	read(STDIN_FILENO,&nValue,4);
+	read(STDIN_FILENO,&pValue,4);
+	read(STDIN_FILENO,&cValue,4);
+	read(STDIN_FILENO,&qValue,4);
+	read(STDIN_FILENO,iValue,sizeof(iValue));	
+	
+
 	//Leer el archivo de entrada indicado en el comando '-i'
 	FILE* entrada=fopen("entrada.in","r");
     if (entrada==NULL){
@@ -21,8 +23,7 @@ int main()
         return 0;
     }
 
-    
-    exit(0);
+   
 	//Leer desde el archivo de entrada la cantidad de particulas indicadas en la primera linea del archivo
 	int cantParticulas;
 	fscanf(entrada,"%d",&cantParticulas);
@@ -48,7 +49,12 @@ int main()
 	}
 	//Simular el calculo de los impactos en el material
 	simulacion(particulasPorProceso, arreglo, nValue, matrizImpactos);
-
+	FILE* test1=fopen("test1.txt","w");
+	for (int j = 0; j < nValue; ++j)
+	{
+	
+		fprintf(test1, "%f\n",arreglo[j]);
+	}
 
 	//Liberar memoria
 	for (int i = 0; i < particulasPorProceso; i++){
@@ -56,5 +62,11 @@ int main()
 	}
 	free(matrizImpactos);
 	free(arreglo);
-	write(STDOUT_FILENO,"HOLA",5);
+	char stringValue[30];
+
+	for (int i = 0; i <nValue; ++i)
+	{
+		write(STDOUT_FILENO,&arreglo[i],sizeof(arreglo[i]));
+	}
+
 }

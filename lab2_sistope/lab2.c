@@ -82,21 +82,28 @@ int main(int argc, char*  argv[])
 		if (pid>0)
 		{
 			sprintf(arregloid,"%d",i);
-			char argv2[5][11];
-			strcpy(argv2[0],nValueStr);
-			strcpy(argv2[1],pValueStr);
-			strcpy(argv2[2],arregloid);
-			strcpy(argv2[3],iValue);
-			strcpy(argv2[4],cValueStr);
 			close(fd[i][read_d]);
-			write(fd[i][write_d],argv2,sizeof(argv2));
+			write(fd[i][write_d],&nValue,4);
+			write(fd[i][write_d],&pValue,4);
+			write(fd[i][write_d],&cValue,4);
+			write(fd[i][write_d],&i,4);
+			write(fd[i][write_d],iValue,sizeof(iValue));
 			close(fd[i][write_d]);
-			printf("len:%ld\n",strlen(argv2[3]));
 			waitpid(pid,NULL,0);
-			char buffer[30];
+			float* resultadoProceso=(float*)malloc(sizeof(float)*nValue);
 			close(fd1[i][write_d]);
-			read(fd1[i][read_d],buffer,30);
+			for (int j = 0; j < nValue; ++j)
+			{
+				read(fd1[i][read_d],&resultadoProceso[j],sizeof(resultadoProceso[j]));
+			}
 			close(fd1[i][read_d]);
+			FILE* test=fopen("test.txt","w");
+			for (int j = 0; j < nValue; ++j)
+			{
+				fprintf(test, "%f\n",resultadoProceso[j]);
+			}
+			
+			
 		}
 		if (pid==-1)
 		{
