@@ -1,32 +1,23 @@
 CC= gcc
 CFLAGS= -Wall -lm -lniceprint -L .
-preout = simular
 out = lab2 
-presource=simular.c 
-source = funciones.c
-main = lab2.c
-preobject= $(presource:.c=.o)
+source = funciones.c lab2.c
 objects = $(source:.c=.o)
-mainObjects = $(main:.c=.o)
 
-$(build): 
+
+
+
+
+$(build):
 	$(out) 
 
-$(out): $(objects) $(mainObjects) $(preout)
-	$(CC) -o $@ $^ $(CFLAGS) 
-
-$(preout): $(preobject) $(objects)
-	$(CC) -o $@ $^ $(CFLAGS)
-
-$(mainObjects):
-	$(CC) -C $*.c
+$(out): $(objects) $(preobject)
+	gcc -o simular funciones.c simular.c $(CFLAGS)
+	$(CC) -o $@ $(objects) $(CFLAGS) 
 
 $(objects): 
 	$(CC) -c $*.c
 
-$(preobject):
-	$(CC) -c $*.c
-
-clean:
-	$(RM) $(out) $(preout) $(preobject) $(mainObject) $(objects)
+clean: 
+	$(RM) $(out) $(objects) simular
 .PHONY: 

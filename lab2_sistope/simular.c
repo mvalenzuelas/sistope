@@ -17,7 +17,7 @@ int main()
 	
 
 	//Leer el archivo de entrada indicado en el comando '-i'
-	FILE* entrada=fopen("entrada.in","r");
+	FILE* entrada=fopen(iValue,"r");
     if (entrada==NULL){
         perror("Error al abrir el archivo\n");
         return 0;

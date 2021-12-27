@@ -4,13 +4,15 @@
 
 int main(int argc, char*  argv[])
 {
+	
 	int nValue=0;
 	int pValue=0;
 	int cValue=0;
 	int dValue=0;
-	char oValue[30];
+	char* oValue=NULL;
 	char iValue[30];
 	int c;
+	printf("Hola\n");
 	opterr=0;
 	while ((c=getopt(argc,argv,"N:p:c:i:o:D"))!= -1){
 		switch(c){
@@ -23,11 +25,11 @@ int main(int argc, char*  argv[])
 			case 'c':
 				sscanf(optarg,"%d",&c);
 				break;
-			case 'o':
-				strcpy(oValue,optarg);
-				break;
 			case 'i':
 				strcpy(iValue,optarg);	
+				break;
+			case 'o':
+				oValue=optarg;
 				break;
 			case 'D':
 				dValue=1;
@@ -46,12 +48,13 @@ int main(int argc, char*  argv[])
 			default:
 				abort();
 		}
-	}
 
+
+	}
 	pid_t pid=getpid();
 
 	float** resultados=(float**)malloc(sizeof(float*)*pValue);
-	for (int k = 0; k < nValue; ++k)
+	for (int k = 0; k < pValue; ++k)
 	{
 		resultados[k]=(float*)malloc(sizeof(float)*nValue);
 	}
@@ -75,7 +78,6 @@ int main(int argc, char*  argv[])
 		pid=fork();
 		if (pid>0)
 		{
-			sprintf(arregloid,"%d",i);
 			close(fd[i][read_d]);
 			write(fd[i][write_d],&nValue,4);
 			write(fd[i][write_d],&pValue,4);
@@ -141,16 +143,16 @@ int main(int argc, char*  argv[])
 			niceprint(nValue,arreglo,arreglo[max]);
 		}
 		free(arreglo);
-		for (int i = 0; i < nValue; ++i)
+
+		for (int i = 0; i < pValue; ++i)
 		{
-			free(fd[i])
-			free(fd1[i])
-			free(resultados[i])
+			free(fd[i]);
+			free(fd1[i]);
+			free(resultados[i]);
 		}
 		free(fd);
 		free(fd1);
 		free(resultados);
-		free(arreglo);
 
 
 	}
