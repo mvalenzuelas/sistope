@@ -8,14 +8,14 @@ $(build):
 	$(out) 
 
 $(out): $(objects) $(preobject)
-	gcc -o simular funciones.c simular.c $(CFLAGS)
+	gcc -o bomb funciones.c bomb.c $(CFLAGS)
 	$(CC) -o $@ $(objects) $(CFLAGS) 
 
 $(objects): 
 	$(CC) -c $*.c
 
 clean: 
-	$(RM) $(out) $(objects) simular
+	$(RM) $(out) $(objects) bomb
 .PHONY: 
 
 

@@ -10,14 +10,12 @@ Entradas:
 	matrizImpactos: 				Una matriz vacia de enteros con 2 columnas y tantas filas como cantidad de particulas
 									para almacenar la posicion de impacto de una particula y la cantidad de energia
 
-	particulasPorProcesoEntero:
-	particulasPorProceso:
-	qValue:
+	particualasPorProcesosEntero:	Valor entero de la division de la cantidad de particulas por la cantuidad
+									de procesos solicitados
 
 	particulasPorProceso:			Entero que representa cantidad de particulas que simular el proceso actual
 
 	qValue:							Entero que representa el identidficador del prcoso que se esta ejecutan
-
 
 Funcionalidad: 	
 	Función que lee un fichero de texto de entrada que contenga la información de los impactos de las particulas,
@@ -227,7 +225,7 @@ void simulacionMultiproceso(float** resultados, pid_t pid, int** fd, int** fd1, 
 		if (pid==0)
 		{
 
-			//Se entregan los parametros al programa simular por el descriptor STDIN_FILENO
+			//Se entregan los parametros al programa bomb por el descriptor STDIN_FILENO
 			close(fd[i][write_d]);
 			dup2(fd[i][read_d],STDIN_FILENO);
 			close(fd[i][read_d]);
@@ -235,8 +233,8 @@ void simulacionMultiproceso(float** resultados, pid_t pid, int** fd, int** fd1, 
 			close(fd1[i][read_d]);
 			dup2(fd1[i][write_d],STDOUT_FILENO);
 			close(fd1[i][write_d]);
-			char* a[]={"simular",NULL};
-			execv("./simular",a);
+			char* a[]={"bomb",NULL};
+			execv("./bomb",a);
 
 		}	
 	}
